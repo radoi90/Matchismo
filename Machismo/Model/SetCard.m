@@ -20,6 +20,21 @@
     return 0;
 }
 
+- (void)setNumber:(NSUInteger)number
+{
+    if (number <= [SetCard maxNumber]) {
+        _number = number;
+    }
+}
+
+- (void)setShading:(NSString *)shading
+{
+    if ([[SetCard validShadings] containsObject:shading])
+    {
+        _shading = shading;
+    }
+}
+
 + (NSArray *)validShadings{
     return @[@"solid", @"outlined", @"striped"];
 }
