@@ -67,6 +67,15 @@
     }
 }
 
+- (NSString *)contents
+{
+    return [NSString stringWithFormat:@"%@:%@:%@:%lu", self.shape, self.color, self.shading, (unsigned long)self.number];
+}
+
++ (NSArray *)validShapes {
+    return @[@"oval", @"squiggle", @"diamond"];
+}
+
 + (NSArray *)validShadings{
     return @[@"solid", @"outlined", @"striped"];
 }

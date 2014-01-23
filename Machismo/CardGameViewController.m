@@ -46,7 +46,7 @@
     [self.game chooseCardAtIndex:chosenButtonIndex];
     [self updateUI];
     
-    /*if ([self.game cardAtIndex:chosenButtonIndex].isChosen) {
+    if ([self.game cardAtIndex:chosenButtonIndex].isChosen) {
         NSInteger scoreDiff = self.game.score - oldScore + 1;
         [self updateResultLabelForScore:scoreDiff
                             chosenCards:oldChosenCards
@@ -59,7 +59,7 @@
     
     [self.labelHistory addObject:self.resultLabel.text];
     self.labelHistorySlider.maximumValue = [self.labelHistory count] - 1;
-    [self moveSliderToValue:self.labelHistorySlider.maximumValue]; */
+    [self moveSliderToValue:self.labelHistorySlider.maximumValue];
 }
 
 - (void)moveSliderToValue:(float)value {

@@ -525,6 +525,20 @@
                                     <action selector="touchCardButton:" destination="Pfi-KB-s6i" eventType="touchUpInside" id="T0d-gf-JHz"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqv-Om-VJ7">
+                                <rect key="frame" x="26" y="423" width="280" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="Xpe-CY-NR5">
+                                <rect key="frame" x="18" y="466" width="284" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="slideLabelHistory:" destination="vXZ-lx-hvc" eventType="valueChanged" id="mNq-PV-K4T"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.50196081399917603" blue="0.25098040699958801" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -536,6 +550,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="labelHistorySlider" destination="Xpe-CY-NR5" id="FVy-fc-Odm"/>
+                        <outlet property="resultLabel" destination="sqv-Om-VJ7" id="you-GS-fGk"/>
                         <outlet property="scoreTitle" destination="hBK-mt-1ax" id="5rk-AV-3Kt"/>
                         <outletCollection property="cardButtons" destination="5Qu-mb-iCQ" id="rvk-HC-1Sh"/>
                         <outletCollection property="cardButtons" destination="w4P-ga-b6i" id="YYj-Rr-vSa"/>

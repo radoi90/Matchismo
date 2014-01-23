@@ -17,4 +17,5 @@
 
 + (NSArray *)validShadings;
 + (NSUInteger)maxNumber;
++ (NSArray *)validShapes;
 @end
