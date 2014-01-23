@@ -15,5 +15,4 @@
 // protected
 // for subclasses
 - (Deck *)createDeck; // abstract
-
 @end

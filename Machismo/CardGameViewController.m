@@ -12,14 +12,17 @@
 @interface CardGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
-@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (strong, nonatomic) IBOutlet UINavigationItem *scoreTitle;
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *matchingModeControl;
 @property (weak, nonatomic) IBOutlet UISlider *labelHistorySlider;
 @property (strong, nonatomic) NSMutableArray *labelHistory; // of NSString
 @end
 
 @implementation CardGameViewController
+
+-(void)viewDidLoad {
+    [self updateUI];
+}
 
 - (NSMutableArray *)labelHistory {
     if (!_labelHistory) _labelHistory = [[NSMutableArray alloc] init];
@@ -47,7 +50,7 @@
     [self.game chooseCardAtIndex:chosenButtonIndex];
     [self updateUI];
     
-    if ([self.game cardAtIndex:chosenButtonIndex].isChosen) {
+    /*if ([self.game cardAtIndex:chosenButtonIndex].isChosen) {
         NSInteger scoreDiff = self.game.score - oldScore + 1;
         [self updateResultLabelForScore:scoreDiff
                             chosenCards:oldChosenCards
@@ -60,9 +63,7 @@
     
     [self.labelHistory addObject:self.resultLabel.text];
     self.labelHistorySlider.maximumValue = [self.labelHistory count] - 1;
-    [self moveSliderToValue:self.labelHistorySlider.maximumValue];
-    
-    if ([self.matchingModeControl isEnabled]) self.matchingModeControl.enabled = NO;
+    [self moveSliderToValue:self.labelHistorySlider.maximumValue];*/
 }
 
 - (void)moveSliderToValue:(float)value {
@@ -81,14 +82,9 @@
     self.game = nil;
     [self updateUI];
     self.resultLabel.text = @"";
-    self.matchingModeControl.enabled = YES;
     self.labelHistorySlider.maximumValue = 0;
     self.labelHistorySlider.value = 0;
     self.labelHistory = nil;
-}
-
-- (IBAction)touchMatchigModeControl:(UISegmentedControl *)sender {
-    self.game.numberOfCardsToMatch = sender.selectedSegmentIndex + 2;
 }
 
 - (void)updateResultLabelForScore:(NSInteger)score
@@ -128,8 +124,7 @@
         cardButton.enabled = !card.isMatched;
     }
     
-    self.matchingModeControl.selectedSegmentIndex = self.game.numberOfCardsToMatch - 2;
-    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", (long)self.game.score];
+    self.scoreTitle.title = [NSString stringWithFormat:@"Score: %ld", (long)self.game.score];
 }
 
 - (NSString *)titleForCard:(Card *)card
