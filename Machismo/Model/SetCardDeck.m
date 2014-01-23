@@ -44,4 +44,9 @@
                          colors:@[@"green", @"red", @"purple"]];
 }
 
+- (NSUInteger)numberOfCardsToMatch
+{
+    return 3;
+}
+
 @end

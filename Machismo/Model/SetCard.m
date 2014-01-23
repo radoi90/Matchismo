@@ -11,6 +11,12 @@
 
 @implementation SetCard
 
+@synthesize matched = _matched;
+
+- (void)setMatched:(BOOL)matched {
+    _matched = NO;
+}
+
 // 3 set cards match when, for each attribute, they are all equal
 // or all have different values (pair-wise distinct)
 - (int)match:(NSArray *)otherCards

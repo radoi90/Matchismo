@@ -21,8 +21,6 @@
     return _cards;
 }
 
-static const int DEFAULT_NUMBER_OF_CARDS_TO_MATCH = 2;
-
 - (instancetype)initWithCardCount:(NSUInteger)count
                         usingDeck:(Deck *)deck
 {
@@ -37,7 +35,7 @@ static const int DEFAULT_NUMBER_OF_CARDS_TO_MATCH = 2;
                 self = nil;
                 break;
             }
-            self.numberOfCardsToMatch = DEFAULT_NUMBER_OF_CARDS_TO_MATCH;
+            self.numberOfCardsToMatch = deck.numberOfCardsToMatch;
         }
     }
     
@@ -55,6 +53,7 @@ static const int COST_TO_CHOOSE = 1;
 
 - (void)chooseCardAtIndex:(NSUInteger)index{
     Card *card = [self cardAtIndex:index];
+    self.score -= COST_TO_CHOOSE;
     
     if (!card.isMatched) {
         if (card.isChosen) {
@@ -71,9 +70,13 @@ static const int COST_TO_CHOOSE = 1;
                         int matchScore = [card match:cardsToMatch];
                         if (matchScore) {
                             self.score += matchScore * MATCH_BONUS;
-                            for(Card *cardToMatch in cardsToMatch)
+                            for(Card *cardToMatch in cardsToMatch) {
                                 cardToMatch.matched = YES;
+                                cardToMatch.chosen = NO;
+                            }
                             card.matched = YES;
+                            card.chosen  = NO;
+                            return;
                         } else {
                             self.score -= MISMATCH_PENALTY;
                             for(Card *cardToMatch in cardsToMatch)
@@ -84,7 +87,6 @@ static const int COST_TO_CHOOSE = 1;
                 }
             }
             
-            self.score -= COST_TO_CHOOSE;
             card.chosen = YES;
         }
     }

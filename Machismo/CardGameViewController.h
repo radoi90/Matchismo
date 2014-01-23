@@ -12,7 +12,11 @@
 
 @interface CardGameViewController : UIViewController
 
+- (void)updateUI;
+
 // protected
 // for subclasses
 - (Deck *)createDeck; // abstract
+- (NSAttributedString *)titleForCard:(Card *)card;
+- (UIImage *)backgroundImageForCard:(Card *)card;
 @end

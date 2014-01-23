@@ -20,10 +20,6 @@
 
 @implementation CardGameViewController
 
--(void)viewDidLoad {
-    [self updateUI];
-}
-
 - (NSMutableArray *)labelHistory {
     if (!_labelHistory) _labelHistory = [[NSMutableArray alloc] init];
     return _labelHistory;
@@ -63,7 +59,7 @@
     
     [self.labelHistory addObject:self.resultLabel.text];
     self.labelHistorySlider.maximumValue = [self.labelHistory count] - 1;
-    [self moveSliderToValue:self.labelHistorySlider.maximumValue];*/
+    [self moveSliderToValue:self.labelHistorySlider.maximumValue]; */
 }
 
 - (void)moveSliderToValue:(float)value {
@@ -118,7 +114,7 @@
     for (UIButton *cardButton in self.cardButtons) {
         NSUInteger cardButtonIndex = [self.cardButtons indexOfObject:cardButton];
         Card *card = [self.game cardAtIndex:cardButtonIndex];
-        [cardButton setTitle:[self titleForCard:card] forState:UIControlStateNormal];
+        [cardButton setAttributedTitle:[self titleForCard:card] forState:UIControlStateNormal];
         [cardButton setBackgroundImage:[self backgroundImageForCard:card]
                               forState:UIControlStateNormal];
         cardButton.enabled = !card.isMatched;
@@ -127,14 +123,14 @@
     self.scoreTitle.title = [NSString stringWithFormat:@"Score: %ld", (long)self.game.score];
 }
 
-- (NSString *)titleForCard:(Card *)card
+- (NSAttributedString *)titleForCard:(Card *)card
 {
-    return card.isChosen ? card.contents : @"";
+    return [[NSAttributedString alloc] initWithString:(card.isChosen || card.isMatched) ? card.contents : @""];
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card
 {
-    return [UIImage imageNamed:card.isChosen ? @"cardfront" : @"cardback"];
+    return [UIImage imageNamed:(card.isChosen || card.isMatched) ? @"cardfront" : @"cardback"];
 }
 
 @end
