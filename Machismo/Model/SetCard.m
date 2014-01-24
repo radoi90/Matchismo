@@ -90,7 +90,6 @@
 
 + (NSArray *)cardsFromText:(NSString *)text
 {
-    NSLog(@"%@", text);
     NSString *pattern = [NSString stringWithFormat:@"(%@):(%@):(%@):(\\d+)",
                          [[SetCard validShapes] componentsJoinedByString:@"|"],
                          [[SetCard validColors] componentsJoinedByString:@"|"],

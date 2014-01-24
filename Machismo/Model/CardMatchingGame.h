@@ -20,4 +20,7 @@
 
 @property (nonatomic, readonly) NSInteger score;
 @property (nonatomic) NSUInteger numberOfCardsToMatch;
+@property (nonatomic, readonly) NSInteger costToChose;
+@property (nonatomic, readonly) NSInteger mismatchPenalty;
+@property (nonatomic, readonly) NSInteger matchBonus;
 @end

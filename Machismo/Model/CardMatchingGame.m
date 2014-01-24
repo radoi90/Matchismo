@@ -11,6 +11,9 @@
 @interface CardMatchingGame()
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
+@property (nonatomic, readwrite) NSInteger costToChose;
+@property (nonatomic, readwrite) NSInteger mismatchPenalty;
+@property (nonatomic, readwrite) NSInteger matchBonus;
 @end
 
 @implementation CardMatchingGame
@@ -39,6 +42,10 @@
         }
     }
     
+    self.mismatchPenalty = 2;
+    self.matchBonus = 4;
+    self.costToChose = 1;
+    
     return self;
 }
 
@@ -46,10 +53,6 @@
 {
     return (index<[self.cards count]) ? self.cards[index] : nil;
 }
-
-static const int MISMATCH_PENALTY = 2;
-static const int MATCH_BONUS = 4;
-static const int COST_TO_CHOOSE = 1;
 
 - (void)chooseCardAtIndex:(NSUInteger)index{
     Card *card = [self cardAtIndex:index];
@@ -68,7 +71,7 @@ static const int COST_TO_CHOOSE = 1;
                     if ([cardsToMatch count] + 1 == self.numberOfCardsToMatch) {
                         int matchScore = [card match:cardsToMatch];
                         if (matchScore) {
-                            self.score += matchScore * MATCH_BONUS;
+                            self.score += matchScore * self.matchBonus;
                             for(Card *cardToMatch in cardsToMatch) {
                                 cardToMatch.matched = YES;
                                 cardToMatch.chosen = NO;
@@ -77,7 +80,7 @@ static const int COST_TO_CHOOSE = 1;
                             card.chosen  = NO;
                             return;
                         } else {
-                            self.score -= MISMATCH_PENALTY;
+                            self.score -= self.mismatchPenalty;
                             for(Card *cardToMatch in cardsToMatch)
                                 cardToMatch.chosen = NO;
                         }
@@ -87,7 +90,7 @@ static const int COST_TO_CHOOSE = 1;
             }
             
             card.chosen = YES;
-            self.score -= COST_TO_CHOOSE;
+            self.score -= self.costToChose;
         }
     }
 }

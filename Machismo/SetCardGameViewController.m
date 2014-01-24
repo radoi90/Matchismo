@@ -68,7 +68,9 @@
 - (void)updateUI
 {
     [super updateUI];
-    NSMutableAttributedString *description = [self.resultLabel.attributedText mutableCopy];
+    NSMutableAttributedString *description = [[self.actionHistory lastObject] mutableCopy];
+    if (!(description)) return;
+    
     NSArray *setCards = [SetCard cardsFromText:description.string];
     
     if (setCards) {
@@ -79,7 +81,8 @@
                                  withAttributedString:[self titleForCard:setCard]];
             }
         }
-        [self.resultLabel setAttributedText:description];
+        [self.actionHistory replaceObjectAtIndex:([self.actionHistory count] -1 )
+                                      withObject:description];
     }
 }
 

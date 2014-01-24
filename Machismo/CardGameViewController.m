@@ -8,12 +8,12 @@
 
 #import "CardGameViewController.h"
 #import "CardMatchingGame.h"
+#import "GameHistoryViewController.h"
 
 @interface CardGameViewController ()
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (strong, nonatomic) IBOutlet UINavigationItem *scoreTitle;
-@property (strong, nonatomic) NSMutableArray *actionHistory; // of NSAttributedString
 @end
 
 @implementation CardGameViewController
@@ -54,49 +54,33 @@
     NSInteger scoreDiff = self.game.score - oldScore;
     NSAttributedString *actionDescription;
     
-    if (isCardBeingUnchose) {
-        [chosenCardsString setString:@""];
-        for (Card *card in currentChosenCards)
-            [chosenCardsString appendString:card.contents];
-        actionDescription = [[NSAttributedString alloc] initWithString:chosenCardsString];
-    } else {
+    if (!isCardBeingUnchose) {
         // MATCH: increment in score, display which cards were matched.
         if (scoreDiff > 0)
         {
             actionDescription = [[NSAttributedString alloc] initWithString:
             [NSString stringWithFormat:@"Matched %@ for %ld points.", chosenCardsString, (long)scoreDiff]];
         }
-        // MISMATCH or CHOSE/UNCHOSE CARD
-        else {
-            //CHOSE/UNCHOSE CARD
-            if ([currentChosenCards count] > [oldChosenCards count]) {
-                [chosenCardsString setString:@""];
-                for (Card *card in currentChosenCards)
-                    [chosenCardsString appendString:card.contents];
-                actionDescription = [[NSAttributedString alloc] initWithString: chosenCardsString];
-            }
-            // MISMATCH: display which cards were mismatched
-            else
-            {
-                actionDescription = [[NSAttributedString alloc] initWithString:
-                [NSString stringWithFormat:@"%@ don't match! %ld point penalty!", chosenCardsString, (long)-scoreDiff]];
-            }
+        // MISMATCH
+        else if ([currentChosenCards count] <= [oldChosenCards count]) {
+            actionDescription = [[NSAttributedString alloc] initWithString:
+            [NSString stringWithFormat:@"%@ don't match! %ld point penalty!", chosenCardsString, (long)-scoreDiff-self.game.costToChose]];
         }
     }
     
+    if (actionDescription) {
+        [self.actionHistory addObject:actionDescription];
+    }
+    
     [self updateUI];
-    [self.actionHistory addObject:actionDescription];
 }
 
 
 
 - (IBAction)touchRedealButton {
     self.game = nil;
+    self.actionHistory = nil;
     [self updateUI];
-    self.resultLabel.text = @"";
-    self.labelHistorySlider.maximumValue = 0;
-    self.labelHistorySlider.value = 0;
-    self.labelHistory = nil;
 }
 
 - (void)updateUI
@@ -121,6 +105,23 @@
 - (UIImage *)backgroundImageForCard:(Card *)card
 {
     return [UIImage imageNamed:(card.isChosen || card.isMatched) ? @"cardfront" : @"cardback"];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"Show history"]) {
+        if ([segue.destinationViewController isKindOfClass:[GameHistoryViewController class]]) {
+            GameHistoryViewController *ghvc = (GameHistoryViewController *)segue.destinationViewController;
+            NSMutableAttributedString *history = [[NSMutableAttributedString alloc] init];
+            
+            for(NSAttributedString *actionDescription in self.actionHistory)
+            {
+                [history appendAttributedString:actionDescription];
+                [history appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+            }
+            ghvc.historyToDisplay = [history copy];
+        }
+    }
 }
 
 @end
