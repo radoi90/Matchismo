@@ -18,4 +18,6 @@
 + (NSArray *)validShadings;
 + (NSUInteger)maxNumber;
 + (NSArray *)validShapes;
++ (NSArray *)validColors;
++ (NSArray *)cardsFromText:(NSString *)text;
 @end

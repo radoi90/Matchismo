@@ -18,8 +18,7 @@
 
 - (Deck *)createDeck
 {
-    return [[SetCardDeck alloc] initWithShapes:@[@"▲", @"●", @"■"]
-                                        colors:@[@"red", @"green", @"purple"]];
+    return [[SetCardDeck alloc] init];
 }
 
 - (void)viewDidLoad
@@ -34,9 +33,12 @@
     NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init];
     if ([card isKindOfClass:[SetCard class]]) {
         SetCard *setCard = (SetCard *)card;
-        symbol = [setCard.shape stringByPaddingToLength:setCard.number
-                                             withString:setCard.shape
-                                        startingAtIndex:0];
+        if ([setCard.shape isEqualToString:@"oval"]) symbol = @"●";
+        if ([setCard.shape isEqualToString:@"squiggle"]) symbol = @"▲";
+        if ([setCard.shape isEqualToString:@"diamond"]) symbol = @"■";
+        symbol = [symbol stringByPaddingToLength:setCard.number
+                                      withString:symbol
+                                 startingAtIndex:0];
         if ([setCard.color isEqualToString:@"red"])
             [attributes setObject:[UIColor redColor]
                            forKey:NSForegroundColorAttributeName];
@@ -61,6 +63,24 @@
     }
     return [[NSMutableAttributedString alloc] initWithString:symbol
                                                   attributes:attributes];
+}
+
+- (void)updateUI
+{
+    [super updateUI];
+    NSMutableAttributedString *description = [self.resultLabel.attributedText mutableCopy];
+    NSArray *setCards = [SetCard cardsFromText:description.string];
+    
+    if (setCards) {
+        for (SetCard *setCard in setCards) {
+            NSRange range = [description.string rangeOfString:setCard.contents];
+            if (range.location != NSNotFound) {
+                [description replaceCharactersInRange:range
+                                 withAttributedString:[self titleForCard:setCard]];
+            }
+        }
+        [self.resultLabel setAttributedText:description];
+    }
 }
 
 - (UIImage *)backgroundImageForCard:(Card *)card

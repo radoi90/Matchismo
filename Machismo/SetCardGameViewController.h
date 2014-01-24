@@ -9,4 +9,5 @@
 #import "CardGameViewController.h"
 
 @interface SetCardGameViewController : CardGameViewController
+-(void)updateUI;
 @end

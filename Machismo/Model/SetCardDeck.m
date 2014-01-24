@@ -10,38 +10,30 @@
 #import "SetCard.h"
 
 @implementation SetCardDeck
-- (instancetype) initWithShapes:(NSArray *)shapes
-                         colors:(NSArray *)colors
+
+- (instancetype) init
 {
     self = [super init];
     
     if (self) {
-        if ([shapes count] == [SetCard maxNumber]
-            && [colors count] == [SetCard maxNumber]) {
-            for(NSString *color in colors)
-            for(NSString *shape in shapes)
-            for(NSString *shading in [SetCard validShadings])
-            for(NSUInteger number = 1; number <= [SetCard maxNumber]; number++)
-            {
-                SetCard *card = [[SetCard alloc] init];
-                
-                card.color      = color;
-                card.shape      = shape;
-                card.shading    = shading;
-                card.number     = number;
-                
-                [self addCard:card];
-            }
-        }
+        for(NSString *color in [SetCard validColors])
+            for(NSString *shape in [SetCard validShapes])
+                for(NSString *shading in [SetCard validShadings])
+                    for(NSUInteger number = 1; number <= [SetCard maxNumber]; number++)
+                    {
+                        SetCard *card = [[SetCard alloc] init];
+                            
+                        card.color      = color;
+                        card.shape      = shape;
+                        card.shading    = shading;
+                        card.number     = number;
+                        
+                        [self addCard:card];
+                    }
     }
     
     return self;
-}
 
-- (instancetype) init
-{
-    return [self initWithShapes:@[@"▲", @"●", @"■"]
-                         colors:@[@"green", @"red", @"purple"]];
 }
 
 - (NSUInteger)numberOfCardsToMatch

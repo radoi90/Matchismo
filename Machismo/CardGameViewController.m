@@ -13,16 +13,14 @@
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
 @property (strong, nonatomic) IBOutlet UINavigationItem *scoreTitle;
-@property (weak, nonatomic) IBOutlet UILabel *resultLabel;
-@property (weak, nonatomic) IBOutlet UISlider *labelHistorySlider;
-@property (strong, nonatomic) NSMutableArray *labelHistory; // of NSString
+@property (strong, nonatomic) NSMutableArray *actionHistory; // of NSAttributedString
 @end
 
 @implementation CardGameViewController
 
-- (NSMutableArray *)labelHistory {
-    if (!_labelHistory) _labelHistory = [[NSMutableArray alloc] init];
-    return _labelHistory;
+- (NSMutableArray *)actionHistory {
+    if (!_actionHistory) _actionHistory = [[NSMutableArray alloc] init];
+    return _actionHistory;
 }
 
 - (CardMatchingGame *) game
@@ -41,38 +39,56 @@
 {
     NSInteger oldScore = self.game.score;
     NSArray *oldChosenCards = self.game.chosenCards;
+    NSMutableString *chosenCardsString = [[NSMutableString alloc] init];
+    for (Card *card in oldChosenCards)
+        [chosenCardsString appendString:card.contents];
     
     NSInteger chosenButtonIndex = [self.cardButtons indexOfObject:sender];
+    Card *chosenCard = [self.game cardAtIndex:chosenButtonIndex];
+    BOOL isCardBeingUnchose = chosenCard.isChosen;
+    [chosenCardsString appendString:chosenCard.contents];
+    
     [self.game chooseCardAtIndex:chosenButtonIndex];
-    [self updateUI];
     
-    if ([self.game cardAtIndex:chosenButtonIndex].isChosen) {
-        NSInteger scoreDiff = self.game.score - oldScore + 1;
-        [self updateResultLabelForScore:scoreDiff
-                            chosenCards:oldChosenCards
-                                   card:[self.game cardAtIndex:chosenButtonIndex]];
+    NSArray *currentChosenCards = self.game.chosenCards;
+    NSInteger scoreDiff = self.game.score - oldScore;
+    NSAttributedString *actionDescription;
+    
+    if (isCardBeingUnchose) {
+        [chosenCardsString setString:@""];
+        for (Card *card in currentChosenCards)
+            [chosenCardsString appendString:card.contents];
+        actionDescription = [[NSAttributedString alloc] initWithString:chosenCardsString];
     } else {
-        self.resultLabel.text = [self.resultLabel.text
-         stringByReplacingOccurrencesOfString:[self.game cardAtIndex:chosenButtonIndex].contents
-                                 withString:@""];
+        // MATCH: increment in score, display which cards were matched.
+        if (scoreDiff > 0)
+        {
+            actionDescription = [[NSAttributedString alloc] initWithString:
+            [NSString stringWithFormat:@"Matched %@ for %ld points.", chosenCardsString, (long)scoreDiff]];
+        }
+        // MISMATCH or CHOSE/UNCHOSE CARD
+        else {
+            //CHOSE/UNCHOSE CARD
+            if ([currentChosenCards count] > [oldChosenCards count]) {
+                [chosenCardsString setString:@""];
+                for (Card *card in currentChosenCards)
+                    [chosenCardsString appendString:card.contents];
+                actionDescription = [[NSAttributedString alloc] initWithString: chosenCardsString];
+            }
+            // MISMATCH: display which cards were mismatched
+            else
+            {
+                actionDescription = [[NSAttributedString alloc] initWithString:
+                [NSString stringWithFormat:@"%@ don't match! %ld point penalty!", chosenCardsString, (long)-scoreDiff]];
+            }
+        }
     }
     
-    [self.labelHistory addObject:self.resultLabel.text];
-    self.labelHistorySlider.maximumValue = [self.labelHistory count] - 1;
-    [self moveSliderToValue:self.labelHistorySlider.maximumValue];
+    [self updateUI];
+    [self.actionHistory addObject:actionDescription];
 }
 
-- (void)moveSliderToValue:(float)value {
-    if ([self.labelHistory count]) {
-        self.resultLabel.text = [self.labelHistory objectAtIndex:value];
-        self.resultLabel.alpha = (value < self.labelHistorySlider.maximumValue) ? 0.3 : 1;
-        self.labelHistorySlider.value = value;
-    }
-}
 
-- (IBAction)slideLabelHistory:(UISlider *)sender {
-    [self moveSliderToValue:sender.value];
-}
 
 - (IBAction)touchRedealButton {
     self.game = nil;
@@ -81,32 +97,6 @@
     self.labelHistorySlider.maximumValue = 0;
     self.labelHistorySlider.value = 0;
     self.labelHistory = nil;
-}
-
-- (void)updateResultLabelForScore:(NSInteger)score
-                      chosenCards:(NSArray *)chosenCards
-                             card:(Card *) card
-{
-    NSMutableString *selectedCardsString = [[NSMutableString alloc] init];
-    for (Card *card in chosenCards)
-        [selectedCardsString appendString:card.contents];
-    [selectedCardsString appendString:card.contents];
-    
-    if (score == 0) {
-        NSMutableString *currSelectionString = [[NSMutableString alloc] init];
-        for (Card *card in self.game.chosenCards)
-            [currSelectionString appendString:card.contents];
-        self.resultLabel.text = currSelectionString;
-    }
-    else if (score < 0) {
-        self.resultLabel.text =
-        [NSString stringWithFormat:@"%@ don't match! %ld point penalty!",
-         selectedCardsString, (long)-score];
-    }
-    else if (score > 0) {
-        self.resultLabel.text =
-        [NSString stringWithFormat:@"Matched %@ for %ld points.", selectedCardsString, (long)score];
-    }
 }
 
 - (void)updateUI
