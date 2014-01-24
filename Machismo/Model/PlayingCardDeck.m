@@ -34,4 +34,9 @@
     return 2;
 }
 
+- (NSString *)type
+{
+    return @"Playing card";
+}
+
 @end

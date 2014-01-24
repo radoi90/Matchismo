@@ -19,8 +19,10 @@
 - (NSArray *)chosenCards;
 
 @property (nonatomic, readonly) NSInteger score;
+@property (nonatomic, readonly) NSInteger highscore;
 @property (nonatomic) NSUInteger numberOfCardsToMatch;
 @property (nonatomic, readonly) NSInteger costToChose;
 @property (nonatomic, readonly) NSInteger mismatchPenalty;
 @property (nonatomic, readonly) NSInteger matchBonus;
+@property (nonatomic, readonly) NSDate *gameStartDate;
 @end

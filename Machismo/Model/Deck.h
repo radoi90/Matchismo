@@ -12,9 +12,12 @@
 @interface Deck : NSObject
 @property (readonly, nonatomic) NSUInteger numberOfCardsToMatch;
 
+
 - (void)addCard:(Card *)card atTop:(BOOL)atTop;
 - (void)addCard:(Card *)card;
-
 - (Card *)drawRandomCard;
+
+// for subclasses
+- (NSString *)type; // abstract
 
 @end

@@ -593,6 +593,7 @@
                     <connections>
                         <segue destination="7Dr-rH-21n" kind="relationship" relationship="viewControllers" id="kes-6v-CHg"/>
                         <segue destination="xQr-lF-y8Z" kind="relationship" relationship="viewControllers" id="8m7-I5-faJ"/>
+                        <segue destination="Rdz-Nv-Ozf" kind="relationship" relationship="viewControllers" id="cVh-H3-aLY"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dwv-af-QSX" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -617,6 +618,37 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uKK-wU-bhr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="306" y="147"/>
+        </scene>
+        <!--Game Highscore View Controller - Highscores-->
+        <scene sceneID="29A-st-mMd">
+            <objects>
+                <viewController id="Rdz-Nv-Ozf" customClass="GameHighscoreViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="tKD-vC-mET"/>
+                        <viewControllerLayoutGuide type="bottom" id="F1G-tX-oJk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="UBz-wM-MDY">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="431"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XtU-cP-1JG">
+                                <rect key="frame" x="20" y="20" width="280" height="391"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <attributedString key="attributedText"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Highscores" id="JE6-5P-N35"/>
+                    <connections>
+                        <outlet property="highscoreTextView" destination="XtU-cP-1JG" id="3h4-q2-k7G"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="J74-Tv-sBy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="306" y="1462"/>
         </scene>
         <!--Navigation Controller - Set Card Game-->
         <scene sceneID="3Cc-Mr-pfH">
@@ -649,6 +681,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Ukd-gY-l7l"/>
+        <segue reference="XG4-B6-Zd0"/>
     </inferredMetricsTieBreakers>
 </document>

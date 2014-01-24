@@ -10,13 +10,56 @@
 
 @interface CardMatchingGame()
 @property (nonatomic, readwrite) NSInteger score;
+@property (nonatomic, readwrite) NSInteger highscore;
 @property (nonatomic, strong) NSMutableArray *cards; // of Card
 @property (nonatomic, readwrite) NSInteger costToChose;
 @property (nonatomic, readwrite) NSInteger mismatchPenalty;
 @property (nonatomic, readwrite) NSInteger matchBonus;
+@property (nonatomic, readwrite, strong) NSDate *gameStartDate;
+@property (nonatomic, strong) NSString *gameType;
 @end
 
 @implementation CardMatchingGame
+
+- (void)setScore:(NSInteger)score {
+    _score = score;
+    if (score > self.highscore)
+        self.highscore = score;
+}
+
+- (void)setHighscore:(NSInteger)highscore {
+    _highscore = highscore;
+    NSDate *highscoreDate = [NSDate date];
+    NSTimeInterval gameDuration = [highscoreDate timeIntervalSinceDate:self.gameStartDate];
+    
+    NSInteger ti = (NSInteger)gameDuration;
+    NSInteger seconds = ti % 60;
+    NSInteger minutes = (ti / 60) % 60;
+    NSInteger hours = (ti / 3600);
+    
+    NSDictionary *newHighscoreRecord = @{@"highscore": [NSNumber numberWithInteger: highscore],
+                                         @"date":highscoreDate,
+                                         @"gameDuration":[NSString stringWithFormat:@"%02i:%02i:%02i", hours, minutes, seconds],
+                                         @"gameType": self.gameType};
+    
+    NSArray *userHighscoreData = [[NSUserDefaults standardUserDefaults] arrayForKey:@"highscores"];
+    if (userHighscoreData) {
+        NSDictionary *highestScoreRecord = [userHighscoreData lastObject];
+        
+        if (highscore > [[highestScoreRecord valueForKey:@"highscore"] integerValue]) {
+            NSMutableArray *newHighscoreData = [userHighscoreData mutableCopy];
+            [newHighscoreData addObject:newHighscoreRecord];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[newHighscoreData copy]
+                                                      forKey:@"highscores"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    } else {
+        [[NSUserDefaults standardUserDefaults] setObject:@[newHighscoreRecord]
+                                                 forKey:@"highscores"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
 
 - (NSMutableArray *)cards
 {
@@ -40,11 +83,13 @@
             }
             self.numberOfCardsToMatch = deck.numberOfCardsToMatch;
         }
+        
+        self.mismatchPenalty = 2;
+        self.matchBonus = 4;
+        self.costToChose = 1;
+        self.gameStartDate = [NSDate date];
+        self.gameType = [deck type];
     }
-    
-    self.mismatchPenalty = 2;
-    self.matchBonus = 4;
-    self.costToChose = 1;
     
     return self;
 }

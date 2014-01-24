@@ -45,4 +45,9 @@
     
     return randomCard;
 }
+
+- (NSString *)type
+{
+    return nil;
+}
 @end

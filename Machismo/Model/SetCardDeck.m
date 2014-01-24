@@ -36,6 +36,11 @@
 
 }
 
+- (NSString *)type
+{
+    return @"Set card";
+}
+
 - (NSUInteger)numberOfCardsToMatch
 {
     return 3;
