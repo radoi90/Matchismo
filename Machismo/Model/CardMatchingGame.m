@@ -99,6 +99,16 @@
     return (index<[self.cards count]) ? self.cards[index] : nil;
 }
 
+- (void)addCards:(NSArray *)objects
+{
+    [self.cards addObjectsFromArray:objects];
+}
+
+- (NSUInteger)cardCount
+{
+    return [self.cards count];
+}
+
 - (void)chooseCardAtIndex:(NSUInteger)index{
     Card *card = [self cardAtIndex:index];
     

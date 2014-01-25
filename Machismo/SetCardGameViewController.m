@@ -21,10 +21,11 @@
     return [[SetCardDeck alloc] init];
 }
 
-- (void)viewDidLoad
+- (CardMatchingGame *) initialGame
 {
-    [super viewDidLoad];
-    [self updateUI];
+    return [[CardMatchingGame alloc] initWithCardCount:12
+                                             usingDeck:[self createDeck]];
+    
 }
 
 - (NSAttributedString *)titleForCard:(Card *)card

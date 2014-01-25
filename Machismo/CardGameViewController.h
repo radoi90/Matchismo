@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Deck.h"
+#import "CardMatchingGame.h"
 
 @interface CardGameViewController : UIViewController
 @property (strong, nonatomic) NSMutableArray *actionHistory; // of NSAttributedString
@@ -18,6 +19,6 @@
 // protected
 // for subclasses
 - (Deck *)createDeck; // abstract
-- (NSAttributedString *)titleForCard:(Card *)card;
-- (UIImage *)backgroundImageForCard:(Card *)card;
+- (CardMatchingGame *) initialGame; // abstract
+- (UIView *) getViewForCard:(Card *)card; // abstract
 @end

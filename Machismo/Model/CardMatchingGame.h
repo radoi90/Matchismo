@@ -17,6 +17,8 @@
 - (void)chooseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 - (NSArray *)chosenCards;
+- (void)addCards:(NSArray *)cards;
+- (NSUInteger)cardCount;
 
 @property (nonatomic, readonly) NSInteger score;
 @property (nonatomic, readonly) NSInteger highscore;
