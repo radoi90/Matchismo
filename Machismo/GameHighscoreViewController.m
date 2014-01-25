@@ -35,8 +35,8 @@
         NSMutableString *text = [[NSMutableString alloc] init];
         
         for (NSDictionary *highscoreRecord in userHighscoreData) {
-            [text appendFormat:@"%d started on: %@ duration: %@ [%@]\n",
-             [[highscoreRecord valueForKey:@"highscore"] integerValue],
+            [text appendFormat:@"%ld started on: %@ duration: %@ [%@]\n",
+             (long)[[highscoreRecord valueForKey:@"highscore"] integerValue],
              [highscoreRecord valueForKey:@"date"],
              [highscoreRecord valueForKey:@"gameDuration"],
              [highscoreRecord valueForKey:@"gameType"]];

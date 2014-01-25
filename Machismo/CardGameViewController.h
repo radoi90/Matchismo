@@ -12,8 +12,6 @@
 #import "CardMatchingGame.h"
 
 @interface CardGameViewController : UIViewController
-@property (strong, nonatomic) NSMutableArray *actionHistory; // of NSAttributedString
-
 - (void)updateUI;
 
 // protected

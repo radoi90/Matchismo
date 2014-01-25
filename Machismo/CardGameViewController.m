@@ -13,18 +13,13 @@
 
 @interface CardGameViewController ()
 @property (weak, nonatomic) IBOutlet UIView *cardDeckView;
-@property (strong, nonatomic) IBOutlet UINavigationItem *scoreTitle;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (strong, nonatomic) CardMatchingGame *game;
 @property (strong, nonatomic) NSMutableArray *cardViews;
 @property (strong, nonatomic) Grid *cardViewGrid;
 @end
 
 @implementation CardGameViewController
-
-- (NSMutableArray *)actionHistory {
-    if (!_actionHistory) _actionHistory = [[NSMutableArray alloc] init];
-    return _actionHistory;
-}
 
 - (Grid *) cardViewGrid
 {
@@ -40,22 +35,25 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:@"UIDeviceOrientationDidChangeNotification" object: nil];
+    [self updateUI];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)orientationChanged:(id)sender
+{
+    self.cardViewGrid = nil;
     [self updateUI];
 }
 
 - (NSMutableArray *) cardViews
 {
-    if (!_cardViews)
-    {
-        _cardViews = [[NSMutableArray alloc] init];
-    
-        for (NSUInteger cardIndex = 0; cardIndex < [self.game cardCount]; cardIndex++)
-        {
-            Card *card = [self.game cardAtIndex:cardIndex];
-        
-            [_cardViews addObject:[self getViewForCard:card]];
-        }
-    }
+    if (!_cardViews) _cardViews = [[NSMutableArray alloc] init];
     
     return _cardViews;
     
@@ -92,41 +90,7 @@
     if ([hitView superview] != self.cardDeckView) return;
  
     NSInteger chosenViewIndex = [self.cardViews indexOfObject:hitView];
-    Card *chosenCard = [self.game cardAtIndex:chosenViewIndex];
-    
-    NSInteger oldScore = self.game.score;
-    NSArray *oldChosenCards = self.game.chosenCards;
-    NSMutableString *chosenCardsString = [[NSMutableString alloc] init];
-    for (Card *card in oldChosenCards)
-        [chosenCardsString appendString:card.contents];
-    
-    BOOL isCardBeingUnchose = chosenCard.isChosen;
-    [chosenCardsString appendString:chosenCard.contents];
-    
     [self.game chooseCardAtIndex:chosenViewIndex];
-    hitView = self getViewForCard:chosenCard
-    
-    NSArray *currentChosenCards = self.game.chosenCards;
-    NSInteger scoreDiff = self.game.score - oldScore;
-    NSAttributedString *actionDescription;
-    
-    if (!isCardBeingUnchose) {
-        // MATCH: increment in score, display which cards were matched.
-        if (scoreDiff > 0)
-        {
-            actionDescription = [[NSAttributedString alloc] initWithString:
-            [NSString stringWithFormat:@"Matched %@ for %ld points.", chosenCardsString, (long)scoreDiff]];
-        }
-        // MISMATCH
-        else if ([currentChosenCards count] <= [oldChosenCards count]) {
-            actionDescription = [[NSAttributedString alloc] initWithString:
-            [NSString stringWithFormat:@"%@ don't match! %ld point penalty!", chosenCardsString, (long)-scoreDiff-self.game.costToChose]];
-        }
-    }
-    
-    if (actionDescription) {
-        [self.actionHistory addObject:actionDescription];
-    }
     
     [self updateUI];
 }
@@ -135,26 +99,36 @@
 
 - (IBAction)touchRedealButton {
     self.game = nil;
-    self.actionHistory = nil;
     [self updateUI];
 }
 
 - (void)updateUI
 {
     if (![self.cardViewGrid inputsAreValid]) return;
-    NSLog(@"%d\t%d", [self.cardViewGrid rowCount], [self.cardViewGrid columnCount]);
     
-    for (NSUInteger cardViewIndex = 0; cardViewIndex < [self.cardViews count]; cardViewIndex++) {
-        UIView *cardView = [self.cardViews objectAtIndex:cardViewIndex];
+    for (UIView *subview in self.cardViews)
+        [subview removeFromSuperview];
+    [self.cardViews removeAllObjects];
+    
+    for (NSUInteger cardIndex = 0; cardIndex < [self.game cardCount]; cardIndex++) {
+        Card *card = [self.game cardAtIndex:cardIndex];
         
-        NSUInteger gridRow = cardViewIndex / [self.cardViewGrid columnCount];
-        NSUInteger gridColumn = cardViewIndex % [self.cardViewGrid columnCount];
+        UIView *cardView = [self getViewForCard:card];
+        [self.cardViews addObject:cardView];
+
+        NSUInteger gridRow = cardIndex / [self.cardViewGrid columnCount];
+        NSUInteger gridColumn = cardIndex % [self.cardViewGrid columnCount];
         
         [cardView setFrame:[self.cardViewGrid frameOfCellAtRow:gridRow inColumn:gridColumn]];
+        
+        if (card.isMatched) [cardView setBackgroundColor:[UIColor grayColor]];
+        
+        if (card.isMatched)
+            [cardView setAlpha: 0.6];
         [self.cardDeckView addSubview:cardView];
     }
     
-    self.scoreTitle.title = [NSString stringWithFormat:@"Score: %ld", (long)self.game.score];
+    self.scoreLabel.text = [NSString stringWithFormat:@"Score: %ld", (long)self.game.score];
 }
 
 @end

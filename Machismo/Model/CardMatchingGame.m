@@ -33,13 +33,13 @@
     NSTimeInterval gameDuration = [highscoreDate timeIntervalSinceDate:self.gameStartDate];
     
     NSInteger ti = (NSInteger)gameDuration;
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
+    long seconds = ti % 60;
+    long minutes = (ti / 60) % 60;
+    long hours = (ti / 3600);
     
     NSDictionary *newHighscoreRecord = @{@"highscore": [NSNumber numberWithInteger: highscore],
                                          @"date":highscoreDate,
-                                         @"gameDuration":[NSString stringWithFormat:@"%02i:%02i:%02i", hours, minutes, seconds],
+                                         @"gameDuration":[NSString stringWithFormat:@"%02li:%02li:%02li", hours, minutes, seconds],
                                          @"gameType": self.gameType};
     
     NSArray *userHighscoreData = [[NSUserDefaults standardUserDefaults] arrayForKey:@"highscores"];

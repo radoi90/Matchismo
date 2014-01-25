@@ -66,7 +66,7 @@
                                                   attributes:attributes];
 }
 
-- (void)updateUI
+/*- (void)updateUI
 {
     [super updateUI];
     NSMutableAttributedString *description = [[self.actionHistory lastObject] mutableCopy];
@@ -85,7 +85,7 @@
         [self.actionHistory replaceObjectAtIndex:([self.actionHistory count] -1 )
                                       withObject:description];
     }
-}
+}*/
 
 - (UIImage *)backgroundImageForCard:(Card *)card
 {
